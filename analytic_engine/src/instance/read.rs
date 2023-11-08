@@ -119,14 +119,14 @@ impl Instance {
             .duration_since_query_query_start_time
             .observe(since_start);
 
-        let unprojected_keys_count = request
+        let projected_count = request.projected_schema.as_record_schema().num_columns();
+        let projected_with_key_count = request
             .projected_schema
             .as_record_schema_with_key()
-            .num_columns()
-            - request.projected_schema.as_record_schema().num_columns();
+            .num_columns();
         info!(
-            "Instance read from table, space_id:{}, table:{}, table_id:{:?}, unprojected_keys_count:{unprojected_keys_count}",
-            table_data.space_id, table_data.name, table_data.id
+            "Instance read from table, space_id:{}, table:{}, table_id:{:?}, projected_count:{projected_count}, projected_with_keys_count:{projected_with_key_count}, unprojected_keys_count:{}",
+            table_data.space_id, table_data.name, table_data.id, projected_with_key_count - projected_count,
         );
 
         // Collect trace metrics.
