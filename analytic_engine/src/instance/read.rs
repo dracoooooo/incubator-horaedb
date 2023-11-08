@@ -29,7 +29,7 @@ use common_types::{
 };
 use futures::stream::Stream;
 use generic_error::BoxError;
-use logger::debug;
+use logger::{debug, info};
 use macros::define_result;
 use snafu::{ResultExt, Snafu};
 use table_engine::{
@@ -118,6 +118,16 @@ impl Instance {
             .maybe_table_level_metrics()
             .duration_since_query_query_start_time
             .observe(since_start);
+
+        let unprojected_keys_count = request
+            .projected_schema
+            .as_record_schema_with_key()
+            .num_columns()
+            - request.projected_schema.as_record_schema().num_columns();
+        info!(
+            "Instance read from table, space_id:{}, table:{}, table_id:{:?}, unprojected_keys_count:{unprojected_keys_count}",
+            table_data.space_id, table_data.name, table_data.id
+        );
 
         // Collect trace metrics.
         let table_options = table_data.table_options();

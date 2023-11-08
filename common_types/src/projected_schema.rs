@@ -168,6 +168,10 @@ impl ProjectedSchema {
         &self.0.schema_with_key
     }
 
+    pub fn as_record_schema(&self) -> &RecordSchema {
+        &self.0.record_schema
+    }
+
     // Returns the record schema after projection.
     pub fn to_record_schema(&self) -> RecordSchema {
         self.0.record_schema.clone()
