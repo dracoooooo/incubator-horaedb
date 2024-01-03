@@ -20,6 +20,8 @@ use query_frontend::plan::Plan;
 use serde::{Deserialize, Serialize};
 use snafu::Snafu;
 
+use crate::metrics::BLOCKED_REQUEST_COUNTER_VEC_GLOBAL;
+
 #[derive(Snafu, Debug)]
 #[snafu(visibility(pub))]
 pub enum Error {
@@ -173,8 +175,18 @@ impl Limiter {
     ///
     /// Error will throws if the plan is forbidden to execute.
     pub fn try_limit(&self, plan: &Plan) -> Result<()> {
-        self.try_limit_by_block_list(plan)?;
-        self.try_limit_by_rules(plan)
+        let result = {
+            self.try_limit_by_block_list(plan)?;
+            self.try_limit_by_rules(plan)
+        };
+
+        if result.is_err() {
+            BLOCKED_REQUEST_COUNTER_VEC_GLOBAL
+                .with_label_values(&[plan.plan_type()])
+                .inc();
+        }
+
+        result
     }
 
     pub fn add_write_block_list(&self, block_list: Vec<String>) {

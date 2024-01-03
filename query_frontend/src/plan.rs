@@ -77,6 +77,16 @@ pub enum Plan {
     Exists(ExistsTablePlan),
 }
 
+impl Plan {
+    pub fn plan_type(&self) -> &str {
+        match self {
+            Self::Query(_) => "query",
+            Self::Insert(_) => "insert",
+            _ => "other",
+        }
+    }
+}
+
 pub struct QueryPlan {
     pub df_plan: DataFusionLogicalPlan,
     pub table_name: Option<String>,
