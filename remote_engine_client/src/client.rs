@@ -115,18 +115,12 @@ impl Client {
         // When success to get the stream, table has been found in remote, not need to
         // evict cache entry.
         let response = response.into_inner();
-<<<<<<< ours
-        let remote_read_record_batch_stream =
-            ClientReadRecordBatchStream::new(table_ident, response, record_schema);
-=======
         let remote_read_record_batch_stream = ClientReadRecordBatchStream::new(
             route_context.endpoint,
             table_ident,
             response,
             record_schema,
-            Default::default(),
         );
->>>>>>> theirs
 
         Ok(remote_read_record_batch_stream)
     }
@@ -503,18 +497,12 @@ impl Client {
         // When success to get the stream, table has been found in remote, not need to
         // evict cache entry.
         let response = response.into_inner();
-<<<<<<< ours
-        let remote_execute_plan_stream =
-            ClientReadRecordBatchStream::new(table_ident, response, plan_schema);
-=======
         let remote_execute_plan_stream = ClientReadRecordBatchStream::new(
             route_context.endpoint,
             table_ident,
             response,
             plan_schema,
-            request.remote_metrics,
         );
->>>>>>> theirs
 
         Ok(remote_execute_plan_stream)
     }
