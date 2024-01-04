@@ -225,11 +225,22 @@ impl ObjectStore for StoreWithMetrics {
 
     async fn get_ranges(&self, location: &Path, ranges: &[Range<usize>]) -> Result<Vec<Bytes>> {
         let _timer = OBJECT_STORE_DURATION_HISTOGRAM.get_ranges.start_timer();
-        let result = self.store.get_ranges(location, ranges).await?;
+        let store = self.store.clone();
+        let loc = location.clone();
+        let ranges = ranges.to_vec();
+        let result = self
+            .runtime
+            .spawn(async move { store.get_ranges(&loc, &ranges).await })
+            .await
+            .map_err(|e| StoreError::Generic {
+                store: METRICS,
+                source: Box::new(e),
+            })??;
         let len: usize = result.iter().map(|v| v.len()).sum();
         OBJECT_STORE_THROUGHPUT_HISTOGRAM
             .get_ranges
             .observe(len as f64);
+
         Ok(result)
     }
 
