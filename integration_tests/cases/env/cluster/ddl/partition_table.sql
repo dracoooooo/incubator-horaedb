@@ -37,6 +37,7 @@ SELECT * from partition_table_t where name in ("ceresdb5", "ceresdb6", "ceresdb7
 
 ALTER TABLE partition_table_t ADD COLUMN (b string);
 
+-- SQLNESS REPLACE endpoint:(.*?), endpoint:xx,
 INSERT INTO partition_table_t (t, id, name, value) VALUES (1651737067000, 10, "ceresdb0", 100);
 
 ALTER TABLE partition_table_t MODIFY SETTING enable_ttl='true';
