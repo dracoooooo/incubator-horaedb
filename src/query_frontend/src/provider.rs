@@ -269,7 +269,7 @@ impl<'a, P: MetaProvider> ContextProviderAdapter<'a, P> {
         let default_schema = self.meta_provider.default_schema_name().to_string();
 
         Self {
-            table_cache: RefCell::new(TableContainer::new(default_catalog, default_schema)),
+            table_cache: RefCell::clone(&self.table_cache),
             err: RefCell::new(None),
             meta_provider: self.meta_provider,
             config: self.config.clone(),

@@ -86,6 +86,7 @@ use crate::{
     promql::{remote_query_to_plan, ColumnNames, Expr as PromExpr, RemoteQueryPlan},
     provider::{ContextProviderAdapter, MetaProvider},
 };
+use crate::container::TableContainer;
 
 // We do not carry backtrace in sql error because it is mainly used in server
 // handler and the error is usually caused by invalid/unsupported sql, which

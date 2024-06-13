@@ -65,7 +65,7 @@ type TableMap = HashMap<String, PlannedTable>;
 /// Container to hold table adapters
 ///
 /// Optimized for default catalog and schema
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct TableContainer {
     default_catalog: String,
     default_schema: String,
