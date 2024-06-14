@@ -62,7 +62,8 @@ test:
 	cd $(DIR); cargo test --workspace -- --test-threads=4
 
 integration-test:
-	cd $(DIR)/integration_tests; make run
+	cd $(DIR)/integration_tests; make run-local
+	cd $(DIR)/integration_tests; make run-cluster
 
 # grcov needs build first, then run test
 build-ut:
